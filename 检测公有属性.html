@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<htm>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>小时钟</title>
+  </head>
+
+  <body>
+    <script>
+      Object.prototype.hasPubProperty = function (property) {
+        //=>验证传递的属性名合法性（一般只能是数字或字符串等基本值）
+        if (!["string", "number", "boolean"].includes(typeof property)) return false;
+        //=>开始校验是否为公有属性(方法中的THIS就是要校验的对象)
+        let n = property in this,
+          m = this.hasOwnProperty(property);
+        return n && !m;
+      }
+      let ary = [];
+      ary.hasPubProperty('push');//=>true
+      Array.hasPubProperty('push');//=>false
+    </script>
+  </body>
+
+  </html>
