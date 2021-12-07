@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<htm>
+
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+  </head>
+
+  <body>
+    <script>
+      ~ function () {
+        /*
+         * myUnique：实现数组去重
+         *    @params
+         *    @return
+         *      去重后的数组
+         * by tanshuai on 20201.12.7
+         */
+        function myUnique() {
+          //此时没有传递要操作的ARY进来，但是方法中的THIS是当前要操作的数组
+          let obj = {};
+          for (let i = 0; i < this.length; i++) {
+            let item = this[i];
+            if (typeof obj[item] !== 'undefined') {
+              this[i] = this[this.length - 1];
+              this.length--;
+              i--;
+              continue
+            }
+            obj[item] = item;
+          }
+          obj = null;
+          return this;
+        }
+        // 扩展到内置类的原型上
+        Array.prototype.myUnique = myUnique;
+      }();
+      let ary = [12, 15, 35, 66, 15, 61, 12, 55, 65, 54, 61];
+      ary.myUnique().sort((a, b) => a - b);
+      console.log(ary);
+    </script>
+  </body>
+
+  </html>
