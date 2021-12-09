@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<htm>
+
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+  </head>
+
+  <body>
+    <script>
+      ~ function () {
+        /*
+         * call：改变函数中的THIS指向
+         *    @params
+         *      context 可以不传递，传递必须是引用类型值（因为后面要给它加$fn的属性）
+         * by tanshuai on 2021.12.9
+         */
+        function call(context) {
+          //this:sum也就是当前要操作的这个函数实例
+          context = context || window;
+          let args = [],
+            result;
+          for (let i = 1; i < arguments.length; i++) {
+            args.push(arguments[i]);
+          }
+
+          context.$fn = this;
+          result = context.$fn(...args); // ...是ES6中的展开运算符，把数组中的每一项分别的展开传递给函数 //=>context.$fn(10,20)
+          delete context.$fn;
+          return result;
+        }
+        // 扩展到内置类的原型上
+        Function.prototype.call = call;
+      }();
+      let obj = {
+        name: 'OBJ'
+      };
+
+      function sum(n,m) {
+        console.log(this);
+        console.log(n,m);
+      }
+      sum.call(obj, 10, 20);
+    </script>
+  </body>
+
+  </html>

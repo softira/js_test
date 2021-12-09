@@ -8,6 +8,14 @@
 
   <body>
     <script>
+      /*
+       * hasPubProperty：检测是否为公有属性，且不为私有属性
+       *    @params
+       *      属性名
+       *    @return
+       *      布尔值，公有属性为true，其余为false
+       * by tanshuai on 2021/11/16
+       */
       Object.prototype.hasPubProperty = function (property) {
         //=>验证传递的属性名合法性（一般只能是数字或字符串等基本值）
         if (!["string", "number", "boolean"].includes(typeof property)) return false;
@@ -17,8 +25,8 @@
         return n && !m;
       }
       let ary = [];
-      ary.hasPubProperty('push');//=>true
-      Array.hasPubProperty('push');//=>false
+      ary.hasPubProperty('push'); //=>true
+      Array.hasPubProperty('push'); //=>false
     </script>
   </body>
 
