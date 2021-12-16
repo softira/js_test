@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<htm>
+
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+  </head>
+
+  <body>
+    <!-- 排序 -->
+    <div class="rank">
+      <a href="javascript:;" rank="data-name">姓名</a>
+      <a href="javascript:;" rank="data-age">年龄</a>
+    </div>
+    <!-- JSON动态绑定内容 -->
+    <div class="user"></div>
+    <script>
+      ~ function () {
+        /* 第一步：从服务器获取需要展示的数据，然后绑定在页面中 */
+        // 1.基于AJAX获取服务器端数据，把数据存储到DATA中
+        // 创建AJAX的实例
+        let DATA = null,
+          xhr = new XMLHttpRequest;
+        // 打开一个请求的链接，基于GET请求和同步编程完成
+        xhr.open('GET', 'json/list.json', false); //除了请求地址，其余都是固定的
+        // 监听服务器返回的状态信息（在HTTP状态码为200，请求状态为4的时候能拿到数据）
+        xhr.onreadystatechange = function () {
+          if (xhr.status === 200 && xhr.readyState === 4) {
+            // 基于responseText获取响应回来的信息
+            DATA = xhr.responseText;
+          }
+        };
+        // 发送AJAX请求
+        xhr.send();
+        // 把获取的JSON字符串转换为对象
+        DATA = JSON.parse(DATA);
+
+        // 2.把获取的数据展示在页面中
+        // 根据获取的DATA：DATA当中有多少项，我们就动态创建出多少个盒子
+        let htmlStr = ``;
+        DATA.forEach(item => {
+          // ITEM是每一项（对象），包含需要展示的每一个产品的详细信息：我们需要拿出每一项信息来展示到页面中（拼到模板字符串中）
+          // 基于结构赋值获取信息
+          let {
+            name,
+            age
+          } = item
+          htmlStr += `<div data-name="${name}" data-age="${age}">
+      <p>姓名：${name}</p>
+      <p>年龄：${age}</p>
+    </div>`;
+        });
+        // 把拼接好的字符串，放到页面指定容器中(user)
+        let user = document.querySelector('.user');
+        user.innerHTML = htmlStr;
+        /* 第二步：点击姓名/年龄按钮，可以把内容按照升降排序 */
+        // 1.想要操作谁先获取谁(排序按钮和内容)
+        let rankList = document.querySelectorAll('.rank a'),
+          content = user.querySelectorAll('div');
+        // 2.先实现升降序排序
+        for (let i = 0; i < rankList.length; i++) {
+          let item = rankList[i];
+          // 设置DATA-TYPE自定义属性记录排序的状态（1升序，-1降序）
+          // rankList[1].setAttribute('data-type', -1);
+          item['data-type'] = -1;
+          item.onclick = function () {
+            // 控制升降序切换
+            // this.setAttribute('data-type', this.getAttribute('data-type') * -1);
+            this['data-type'] *= -1;
+            // 把类数组转换为数组，目的是为了使用SORT进行排序
+            content = [].slice.call(content, 0);
+            // 进行排序
+            content.sort((next, cur) => {
+              //=>NEXT/CUR存储的是每个元素对象（此时我们需要使用每个元素的价格：在数据绑定的时候，我们就把价格等信息绑定给当前元素的某个自定义属性，此时需要用的时候，直接基于自定义属性的方法获取到即可）
+              let rank = this.getAttribute('rank');
+              cur = cur.getAttribute(rank);
+              next = next.getAttribute(rank);
+              if (rank === 'data-name') {
+                return next.localeCompare(cur) * this['data-type'];
+              } else {
+                // return (next - cur) * this.getAttribute('data-type');
+                return (next - cur) * this['data-type'];
+              }
+            });
+            // 数据排序，重新加载数据
+            content.forEach(item => {
+              user.appendChild(item);
+            });
+          }
+        }
+      }();
+    </script>
+  </body>
+
+  </html>
