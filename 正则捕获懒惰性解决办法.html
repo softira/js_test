@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<htm>
+
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+  </head>
+
+  <body>
+    <script>
+      /*
+       * execAll：一次性捕获全部满足正则的字符串
+       *    @params
+       *      想要被捕获的字符串
+       *    @return
+       *      去重后的数组
+       * by tanshuai on 2021.12.21
+       */
+      ~ function () {
+        function execAll(str = "") {
+          let ary = [],
+            res = this.exec(str);
+          // 首先验证正则是否设置了全局，不设置则不能进行循环捕获
+          if (!this.global) return this.exec(str);
+          while (res) {
+            ary.push(res[0]);
+            res = this.exec(str);
+          }
+          return ary.length === 0 ? null : ary;
+        }
+        RegExp.prototype.execAll = execAll
+      }();
+      let reg = /\d+/g;
+      let str = "tanshuai1998year11month13day"
+      console.log(reg.execAll(str));
+      //=>字符串中的MATCH方法，可以在执行一次的情况下，捕获到所有匹配的数据（前提：正则也得设置G才可以）
+      console.log(str.match(reg));
+    </script>
+  </body>
+
+  </html>
