@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<htm>
+
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+  </head>
+
+  <body>
+    <script>
+      ~ function () {
+        /* 
+         * formatTime：时间字符串的格式化处理
+         *  @params
+         *    tmplete:[string] 我们希望获得的日期格式的模板
+         *    模板规则：{0}->年 {1~5}->月日时分秒
+         *  @return
+         *    [string] 格式化后的时间字符串
+         * by tanshuai on 2021/12/24
+         */
+        function formatTime(templete = '{0}年{1}月{2}日 {3}时{4}分{5}秒') {
+          // 1.首先获取时间字符串的年月日等信息
+          let timeAry = this.match(/\d+/g);
+          return templete = templete.replace(/\{(\d+)\}/g, (...[, $1]) => {
+            //=>content：当前本次大正则匹配的信息  $1：本次小分组单独匹配的信息
+            //以$1的值作为索引，到TIMEARY中找到对应的时间（如果没有则用"00"补）
+            let time = timeAry[$1] || "00";
+            return time.length < 2 ? "0" + time : time;
+          });
+        }
+
+        /* 
+         * queryURLParams：获取URL地址问号后面的参数信息（可能也包含HASH值）
+         *  @params
+         *  @return
+         *    [object] 把所有问号参数信息以键值对的方式存储起来并返回
+         * by tanshuai on 2021/12/24
+         */
+        function queryURLParams() {
+          let obj = {};
+          this.replace(/([^?=&#]+)=([^?=&#]+)/g, (...[, $1, $2]) => obj[$1] = $2);
+          this.replace(/#([^?=&#]+)/g, (...[, $1]) => obj['HASH'] = $1);
+          return obj;
+        }
+
+        /* 
+         * millimeter：实现大数字的千分符处理
+         *  @params
+         *  @return
+         *    [string] 千分符后的字符串
+         * by tanshuai on 2021/12/24
+         */
+        function millimeter() {
+          return this.replace(/\d{1,3}(?=(\d{3})+$)/g, content => content + ',');
+        }
+        // 扩展到内置类String.prototype上
+        ["formatTime", "queryURLParams", "millimeter"].forEach(item => {
+          String.prototype[item] = eval(item);
+        });
+      }();
+      let time = "2021-12-24 15:42:3";
+      //=>服务器获取的
+      //  "2021-12-24 15:42:3"
+      //  "2021/12/24 15:42:3"
+      //=>想要转变为的格式
+      //  "12月13日 15时42分"
+      //  "2021年12月24日"
+      //  ...
+      time.formatTime();
+      time.formatTime('{1}月{2}日{0}年');
+      time.formatTime('{1}-{2}-{0}');
+      let url = "https://www.bilibili.com/video/BV1rV411n72v?p=157&spm_id_from=pageDriver";
+      url.queryURLParams();
+      let num = "19980124";
+      num.millimeter();
+    </script>
+  </body>
+
+  </html>
