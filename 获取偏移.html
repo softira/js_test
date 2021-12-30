@@ -6,9 +6,23 @@
     <title></title>
   </head>
   <style>
-    *{padding: 0;margin: 0;}
-    .box1{height: 100px;margin: 10px;border: 2px solid #000;padding: 10px;position: relative;}
-    .box2{margin: 10px;height: 10px;}
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    .box1 {
+      height: 100px;
+      margin: 10px;
+      border: 2px solid #000;
+      padding: 10px;
+      position: relative;
+    }
+
+    .box2 {
+      margin: 10px;
+      height: 10px;
+    }
   </style>
 
   <body>
@@ -31,15 +45,19 @@
             t = curEle.offsetTop;
           //存在父参照物，而且没有找到BODY
           while (par && par.tagName !== "BODY") {
-            l += par.clientLeft;
-            t += par.clientTop;
+            if (!/MSIE 8\.0/.test(navigator.userAgent)) {
+              //IE8中偏移值自己就算了边框了
+              //navigator.userAgent获取当前浏览器的版本信息
+              l += par.clientLeft;
+              t += par.clientTop;
+            }
             l += par.offsetLeft;
             t += par.offsetTop;
             par = par.offsetParent;
           }
           return {
-            left: t,
-            top: l
+            left: l,
+            top: t
           }
         }
         let box = document.querySelector('.box2');
