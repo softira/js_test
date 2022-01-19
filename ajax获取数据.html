@@ -14,7 +14,9 @@
     </div>
     <!-- JSON动态绑定内容 -->
     <div class="user"></div>
-    <script>
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="./shop.js"></script>
+    <!-- <script>
       ~ function () {
         /* 第一步：从服务器获取需要展示的数据，然后绑定在页面中 */
         // 1.基于AJAX获取服务器端数据，把数据存储到DATA中
@@ -24,10 +26,12 @@
         // 打开一个请求的链接，基于GET请求和同步编程完成
         xhr.open('GET', 'json/list.json', false); //除了请求地址，其余都是固定的
         // 监听服务器返回的状态信息（在HTTP状态码为200，请求状态为4的时候能拿到数据）
+        console.log(1);
         xhr.onreadystatechange = function () {
           if (xhr.status === 200 && xhr.readyState === 4) {
             // 基于responseText获取响应回来的信息
             DATA = xhr.responseText;
+            
           }
         };
         // 发送AJAX请求
@@ -89,7 +93,7 @@
           }
         }
       }();
-    </script>
+    </script> -->
   </body>
 
   </html>
